@@ -1,0 +1,14 @@
+name: PRSetLabeler
+on: 
+  pull_request:
+    types: opened
+
+jobs:
+  label:
+    name: Set label
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set label
+        env:
+          LABELS: '[\"PR\", \"API\"]' # Set the label you want to add to the PR
+        run: 'curl -X POST -H "Content-Type: application/json" -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -d "{ \"labels\": ${{ env.LABELS }} }" https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels'
