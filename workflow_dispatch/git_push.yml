@@ -1,0 +1,19 @@
+name: GitPush
+on: [workflow_dispatch]
+
+jobs:
+  gitPush:
+    name: Git Push by select branch
+    runs-on: ubuntu-latest
+    env:
+      PUSH_BRANCH: "master"
+    run: |
+      git clone https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+      cd ${{ github.event.repository.name }}/
+      branch=$(echo ${{ github.event.ref }} | cut -c 12-)
+      if [ $branch != ${{ github.event.repository.default_branch }} ]; then
+        git fetch
+        git checkout -b $branch origin/$branch
+      fi
+      git remote add pushgit https://${{ secrets.PUSH_GIT_USER }}:${{ secrets.PUSH_GIT_PW }}@${{ secrets.PUSH_GIT_URL }}
+      git push -f pushgit $branch:${{ env.PUSH_BRANCH }}
