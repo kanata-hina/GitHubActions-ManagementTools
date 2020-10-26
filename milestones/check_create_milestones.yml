@@ -1,0 +1,25 @@
+name: Check and Create Milestons
+on:
+  schedule:
+    - cron: '30 22 * * 4'
+
+jobs:
+  milestones:
+    name: Check and create milestones
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.14
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.14
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Check and create milestones
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+          MILLESTONES_PREFIX: "Sprint"
+        run: |
+          cp -r .github/workflows/go .
+          cd go/milestones/check
+          go run check-milestones.go
