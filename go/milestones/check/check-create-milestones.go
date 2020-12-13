@@ -89,7 +89,7 @@ func main() {
 		}
 		fmt.Println(resp)
 
-		newDueOn := dueOn.AddDate(0, 0, 15).Format(time.RFC3339)
+		newDueOn := dueOn.AddDate(0, 0, 14).Format(time.RFC3339)
 		num := strings.Split(milestones[0].Title, milestonesPrefix)[1]
 		closeNum, err := strconv.Atoi(num)
 		openNum := closeNum + 1
