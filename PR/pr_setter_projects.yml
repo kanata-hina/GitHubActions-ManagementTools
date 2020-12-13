@@ -1,0 +1,28 @@
+name: PRSetProjects
+on: 
+  pull_request:
+    types:
+      - opened
+
+jobs:
+  projects:
+    name: Set projects
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.14
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.14
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Set projects
+        env:
+          TOKEN: ${{ secrets.PROJECT_PERSONAL_ACCESS_TOKEN }}
+          ACTOR: ${{ github.actor }}
+          PR_ID: ${{ github.event.pull_request.id }}
+          PROJECT_REVIEW_COLUMN_ID: ${{ secrets.PROJECT_REVIEW_COLUMN_ID }}
+          PROJECT_DEPENDA_BOT_COLUMN_ID: ${{ secrets.PROJECT_DEPENDA_BOT_COLUMN_ID }}
+        run: |
+          cp -r .github/workflows/go .
+          cd go/projects/set
+          go run set-projects.go
